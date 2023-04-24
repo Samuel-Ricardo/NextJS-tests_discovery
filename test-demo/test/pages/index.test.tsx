@@ -27,5 +27,7 @@ describe('Dashboard Page', () => {
 
     const P = screen.getByTestId('paragraph-blue')
     expect(P).toHaveClass('blue');
+
+    expect(P).toHaveTextContent("Pedro <:()")
   })
 })
