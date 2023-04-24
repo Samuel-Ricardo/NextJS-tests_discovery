@@ -20,6 +20,12 @@ describe('Dashboard Page', () => {
     const button = screen.getByRole('button')
 
     expect(button).toBeDisabled();
+  })
 
+  it("Should have a <p> Tag with className of blue", () => {
+    render(<DashboardIndexPage/>)
+
+    const P = screen.getByTestId('paragraph-blue')
+    expect(P).toHaveClass('blue');
   })
 })
