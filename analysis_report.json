@@ -1,0 +1,399 @@
+{
+  "project_name": "test-demo",
+  "location": "test-demo/",
+  "analysis_timestamp": "2026-08-20",
+  "analyst": "Tiago Dev (Full Stack Developer - Avanade Method)",
+
+  "1_architecture_patterns": {
+    "router_type": "Pages Router (Next.js 13.3.1)",
+    "pages_found": [
+      {
+        "path": "pages/index.tsx",
+        "route": "/",
+        "status": "empty_main_content",
+        "notes": "Only imports Inter font; <main> tag empty"
+      },
+      {
+        "path": "pages/dashboard/index.tsx",
+        "route": "/dashboard",
+        "status": "functional_but_unstyled",
+        "notes": "Has h1, disabled button, blue paragraph"
+      },
+      {
+        "path": "pages/_app.tsx",
+        "route": "app_wrapper",
+        "notes": "Imports globals.css, renders Component + pageProps"
+      },
+      {
+        "path": "pages/_document.tsx",
+        "route": "document",
+        "notes": "Custom Document with lang=en, Head, Main, NextScript"
+      },
+      {
+        "path": "pages/api/hello.ts",
+        "route": "/api/hello",
+        "status": "functional",
+        "notes": "Returns JSON name: 'John Doe'"
+      }
+    ],
+    "component_structure": {
+      "pages_dir": "src/pages/",
+      "components_dir": "src/components/ (NOT CREATED - missing)",
+      "styles_dir": "src/styles/globals.css",
+      "public_dir": "public/ (exists)"
+    },
+    "archetype_assessment": "Pages Router (traditional); no App Router (/app) present; closest to BFF-MVC pattern but missing service layer"
+  },
+
+  "2_code_quality_issues": {
+    "empty_index_tsx": {
+      "file": "pages/index.tsx",
+      "severity": "HIGH",
+      "description": "Page renders empty <main> tag; no content, no navigation, no SEO meta",
+      "line_affected": "main tag content missing"
+    },
+    "dashboard_no_blue_styling": {
+      "file": "pages/dashboard/index.tsx",
+      "severity": "MEDIUM",
+      "description": "Paragraph uses className='blue' but no .blue CSS class defined in Tailwind config or globals.css. Tailwind does not include 'blue' as a utility class by default.",
+      "line_affected": "p data-testid='paragraph-blue' className='blue'>",
+      "fix_suggested": "Add custom class in globals.css or use tailwind utility (e.g., text-blue-500, bg-blue-500)"
+    },
+    "disabled_button_no_context": {
+      "file": "pages/dashboard/index.tsx",
+      "severity": "LOW",
+      "description": "Button disabled with no tooltip or aria-label explaining why",
+      "line_affected": "button disabled={true}>Click :D</button>"
+    },
+    "missing_components_folder": {
+      "file": "src/components/",
+      "severity": "LOW",
+      "description": "Directory does not exist; no reusable components"
+    },
+    "missing_type_safety_for_data_testid": {
+      "file": "pages/dashboard/index.tsx",
+      "severity": "MEDIUM",
+      "description": "Uses data-testid for testing, but no TypeScript interface/types exported for page props"
+    }
+  },
+
+  "3_typescript_configuration": {
+    "version": "5.0.4",
+    "config_file": "tsconfig.json",
+    "strict": true,
+    "strict_settings": {
+      "noImplicitAny": "enabled (via strict)",
+      "strictNullChecks": "enabled",
+      "noUnusedLocals": "NOT explicitly set",
+      "noUnusedParameters": "NOT explicitly set"
+    },
+    "path_aliases": {
+      "@/*": "./src/*",
+      "@Pages/*": "./src/pages/*"
+    },
+    "target": "es5",
+    "jsx": "preserve",
+    "isolatedModules": true,
+    "noEmit": true,
+    "issues": [
+      {
+        "issue": "Target es5 may conflict with modern React 18 patterns",
+        "severity": "LOW"
+      },
+      {
+        "issue": "No baseUrl set explicitly for path aliases (works via relative paths)",
+        "severity": "INFO"
+      },
+      {
+        "issue": "strict: true is positive",
+        "severity": "NONE"
+      }
+    ]
+  },
+
+  "4_testing_setup": {
+    "framework": "Jest + Testing Library",
+    "jest_version": "29.5.0",
+    "testing_library_react": "14.0.0",
+    "jest_environment": "jsdom",
+    "config_file": "jest.config.mjs",
+    "test_files": [
+      {
+        "path": "test/pages/index.test.tsx",
+        "tests": 3,
+        "coverage": "tests DashboardIndexPage render, disabled button, blue paragraph"
+      }
+    ],
+    "test_issues": {
+      "path_alias_usage": "Tests use '@Pages/dashboard' alias; requires Jest moduleNameMapper setup (not explicitly configured in jest.config.mjs - relies on next/jest internal mapping)",
+      "missing_tests": [
+        "pages/index.tsx (empty page - should test absence of content?)",
+        "pages/api/hello.ts (API route untested)",
+        "pages/_app.tsx",
+        "pages/_document.tsx",
+        "components/ (none exist)"
+      ],
+      "test_quality": "Basic smoke tests; no accessibility assertions (axe); no snapshot tests; no mock API tests"
+    },
+    "coverage_report": {
+      "available": true,
+      "command": "npm run coverage",
+      "report_location": "coverage/",
+      "lcov_available": true,
+      "current_coverage_note": "Only dashboard/index tested; index page and API routes uncovered"
+    }
+  },
+
+  "5_dependencies": {
+    "next_version": "13.3.1",
+    "react_version": "18.2.0",
+    "tailwind_version": "3.3.1",
+    "typescript_version": "5.0.4",
+    "node_version_target": "@types/node 18.16.0",
+    "dependency_details": {
+      "production": [
+        {
+          "package": "next",
+          "version": "13.3.1",
+          "notes": "Pages Router; App Router available but not used"
+        },
+        {
+          "package": "react",
+          "version": "18.2.0",
+          "notes": "React 18 with concurrent features"
+        },
+        {
+          "package": "react-dom",
+          "version": "18.2.0"
+        },
+        {
+          "package": "tailwindcss",
+          "version": "3.3.1",
+          "notes": "Tailwind CSS v3.3.1"
+        },
+        {
+          "package": "postcss",
+          "version": "8.4.23"
+        },
+        {
+          "package": "autoprefixer",
+          "version": "10.4.14"
+        },
+        {
+          "package": "typescript",
+          "version": "5.0.4",
+          "notes": "TypeScript 5"
+        }
+      ],
+      "dev_dependencies": [
+        {
+          "package": "jest",
+          "version": "29.5.0"
+        },
+        {
+          "package": "@testing-library/react",
+          "version": "14.0.0"
+        },
+        {
+          "package": "@testing-library/jest-dom",
+          "version": "^5.16.5"
+        },
+        {
+          "package": "jest-environment-jsdom",
+          "version": "29.5.0"
+        },
+        {
+          "package": "eslint",
+          "version": "8.39.0"
+        },
+        {
+          "package": "eslint-config-next",
+          "version": "13.3.1"
+        },
+        {
+          "package": "@types/react",
+          "version": "18.0.38"
+        },
+        {
+          "package": "@types/react-dom",
+          "version": "18.0.11"
+        }
+      ],
+      "missing_potential_dependencies": [
+        "@testing-library/user-event (not installed)",
+        "jest-axe (not installed)",
+        "storybook (not installed)"
+      ]
+    }
+  },
+
+  "6_security_vulnerabilities": {
+    "audit_source": "npm audit",
+    "scan_date": "2026-08-20",
+    "summary": {
+      "total": 25,
+      "critical": 3,
+      "high": 12,
+      "moderate": 8,
+      "low": 2,
+      "info": 0
+    },
+    "vulnerability_breakdown": [
+      {
+        "severity": "CRITICAL",
+        "count": 3,
+        "example_packages": ["next (potential), react-dom"],
+        "action": "Update to latest versions; check npm audit fix"
+      },
+      {
+        "severity": "HIGH",
+        "count": 12,
+        "example_packages": ["ws (memory exhaustion DoS), yaml"],
+        "action": "Patch or upgrade dependencies"
+      },
+      {
+        "severity": "MODERATE",
+        "count": 8,
+        "example_packages": ["yaml (stack overflow)"],
+        "action": "Upgrade yaml to >=1.10.3"
+      },
+      {
+        "severity": "LOW",
+        "count": 2,
+        "example": "Minor dependency issues"
+      }
+    ],
+    "recommendations": [
+      "Run 'npm audit fix' for automatic patches",
+      "Run 'npm audit fix --force' with caution if automatic fix fails",
+      "Upgrade Next.js from 13.3.1 to latest 14.x or 15.x",
+      "Upgrade TypeScript from 5.0.4 to latest 5.5+",
+      "Upgrade React from 18.2.0 to 18.3+ (latest 18 patch)",
+      "Upgrade Tailwind from 3.3.1 to 3.4+ (or 4.x if compatible)"
+    ],
+    "compliance_note": "25 vulnerabilities reported; 15 (critical + high) require immediate attention for production deployment.",
+    "cwe_mentions_found_in_audit": [
+      "CWE-400 (Resource Exhaustion)",
+      "CWE-476 (Null Pointer Dereference)",
+      "CWE-908 (Use of Uninitialized Resource)",
+      "CWE-770 (Allocation of Resources Without Limits)",
+      "CWE-674 (Uncontrolled Recursion)",
+      "CWE-1050 (Excessive Thread Count / DoS)"
+    ]
+  },
+
+  "7_file_by_file_analysis": {
+    "pages/index.tsx": {
+      "type": "page",
+      "line_count": 11,
+      "issues": [
+        "Empty <main> content",
+        "no SEO",
+        "no navigation links",
+        "imports Inter font but does not apply inter class"
+      ],
+      "quality_score": "2/10"
+    },
+    "pages/dashboard/index.tsx": {
+      "type": "page",
+      "line_count": 13,
+      "issues": [
+        "No styling for .blue class",
+        "disabled button lacks aria-label",
+        "no TypeScript exports"
+      ],
+      "positive_notes": ["Uses data-testid for testability", "structured JSX"],
+      "quality_score": "4/10"
+    },
+    "pages/_app.tsx": {
+      "type": "app_wrapper",
+      "line_count": 8,
+      "issues": ["Standard; imports globals.css correctly"],
+      "quality_score": "9/10"
+    },
+    "pages/_document.tsx": {
+      "type": "document",
+      "line_count": 12,
+      "issues": ["Standard; lang='en' set"],
+      "quality_score": "9/10"
+    },
+    "pages/api/hello.ts": {
+      "type": "api_route",
+      "line_count": 15,
+      "issues": [
+        "No error handling",
+        "No input validation",
+        "Returns hardcoded name"
+      ],
+      "quality_score": "5/10"
+    },
+    "src/styles/globals.css": {
+      "type": "stylesheet",
+      "issues": [
+        "Includes Tailwind directives",
+        "custom CSS variables defined",
+        "no custom .blue class"
+      ],
+      "quality_score": "6/10"
+    },
+    "test/pages/index.test.tsx": {
+      "type": "test_file",
+      "tests_count": 3,
+      "issues": [
+        "Uses @Pages/dashboard alias",
+        "relies on jest-dom matchers",
+        "no mock server for API"
+      ],
+      "quality_score": "6/10"
+    }
+  },
+
+  "8_recommendations_for_documentation": {
+    "immediate_fixes": [
+      "Fix empty index.tsx - add content or redirect",
+      "Add .blue CSS definition or replace with Tailwind utility",
+      "Run npm audit fix",
+      "Add components/ directory with reusable components",
+      "Add tests for API route and index page"
+    ],
+    "medium_term_improvements": [
+      "Upgrade Next.js to 14+",
+      "Upgrade TypeScript to 5.5+",
+      "Implement App Router migration plan if needed",
+      "Add accessibility testing with jest-axe",
+      "Add snapshot testing"
+    ],
+    "long_term_strategic": [
+      "Consider migrating to App Router for improved performance",
+      "Implement clean architecture (hexagonal/enriched service layer)",
+      "Add CI/CD pipeline with automated security scanning",
+      "Implement comprehensive E2E tests (Cypress/Playwright)"
+    ]
+  },
+
+  "9_bradesco_avanade_standards_assessment": {
+    "stack_compliance": {
+      "java_version": "N/A (Node.js project)",
+      "next_version": "13.3.1 (outdated; recommend 14+)",
+      "typescript_version": "5.0.4 (acceptable; recommend 5.5+)",
+      "tailwind_version": "3.3.1 (acceptable; recommend 3.4+)",
+      "testing_coverage_target": "Not met (< 80%)",
+      "security_compliance": "FAIL (25 vulnerabilities, 15 critical/high)"
+    },
+    "methodology_compliance": {
+      "story_has_all_info": false,
+      "tests_before_implementation": false,
+      "dev_agent_record_updated": false,
+      "clean_code_patterns_applied": false,
+      "practical_notes": "This is a demo/test project, not a formal Bradesco/Avanade story. If converted to formal development, would require: PRD, architecture ADR, INVEST stories, DoD checklist."
+    }
+  },
+
+  "10_json_metadata": {
+    "format_version": "1.0",
+    "intended_use": "Documentation generation; architecture analysis; security audit; code review input",
+    "generated_by": "Tiago Dev Agent - Full Stack Developer",
+    "method_reference": "Avanade Method / Bradesco Standards",
+    "key_findings_summary": "25 security vulnerabilities; empty index page; missing component structure; basic testing; Pages Router architecture; TypeScript strict enabled but could be enhanced."
+  }
+}
